@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_core": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": "minecraft:dragon_head" }] } },
+    "has_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipe": "epic_relics:dragon_sight_helmet_smithing" } }
+  },
+  "requirements": [["has_core", "has_recipe"]],
+  "rewards": { "recipes": ["epic_relics:dragon_sight_helmet_smithing"] }
+}

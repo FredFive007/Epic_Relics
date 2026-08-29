@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:mace",
+  "base": "minecraft:netherite_sword",
+  "addition": "minecraft:nether_star",
+  "result": { "id": "epic_relics:gravity_blade" }
+}

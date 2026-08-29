@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/bow",
+  "textures": {
+    "layer0": "epic_relics:item/resonance_bow_pulling_1"
+  }
+}

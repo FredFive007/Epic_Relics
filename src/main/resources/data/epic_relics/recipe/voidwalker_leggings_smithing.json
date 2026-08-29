@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:dragon_egg",
+  "base": "minecraft:netherite_leggings",
+  "addition": "minecraft:nether_star",
+  "result": { "id": "epic_relics:voidwalker_leggings" }
+}

@@ -1,0 +1,18 @@
+{
+	"required": true,
+	"package": "dev.epicrelics.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"EnderManMixin",
+		"LivingEntityLandingMixin",
+		"LivingEntityKnockbackMixin",
+		"AbstractArrowMixin"
+	],
+	"client": [
+		"client.FogRendererMixin",
+		"client.LightmapRenderStateExtractorMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

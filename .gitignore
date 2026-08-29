@@ -1,0 +1,13 @@
+.gradle/
+build/
+out/
+run/
+logs/
+*.log
+
+# Local development notes and specifications
+/AGENTS.md
+/Epic_Relics_Codex_开发规格_v1.0.docx
+/docs/implementation-notes.md
+/docs/manual-test-checklist.md
+

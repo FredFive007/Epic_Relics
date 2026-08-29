@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:heavy_core",
+  "base": "minecraft:netherite_boots",
+  "addition": "minecraft:nether_star",
+  "result": { "id": "epic_relics:heavy_core_boots" }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "epic_relics:item/skywing_chestplate"
+  }
+}

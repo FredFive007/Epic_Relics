@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:silence_armor_trim_smithing_template",
+  "base": "epic_relics:netherite_bow_blank",
+  "addition": "minecraft:nether_star",
+  "result": { "id": "epic_relics:resonance_bow" }
+}

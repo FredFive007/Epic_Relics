@@ -1,0 +1,21 @@
+{
+	"schemaVersion": 1,
+	"id": "epic_relics",
+	"version": "${version}",
+	"name": "Epic Relics",
+	"description": "Epic endgame relic equipment for Minecraft.",
+	"authors": ["Epic Relics contributors"],
+	"license": "All Rights Reserved",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["dev.epicrelics.EpicRelics"],
+		"client": ["dev.epicrelics.client.EpicRelicsClient"]
+	},
+	"mixins": ["epic_relics.mixins.json"],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

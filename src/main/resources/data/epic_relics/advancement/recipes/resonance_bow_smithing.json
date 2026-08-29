@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_core": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": "minecraft:silence_armor_trim_smithing_template" }] } },
+    "has_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipe": "epic_relics:resonance_bow_smithing" } }
+  },
+  "requirements": [["has_core", "has_recipe"]],
+  "rewards": { "recipes": ["epic_relics:resonance_bow_smithing"] }
+}

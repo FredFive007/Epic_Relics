@@ -1,0 +1,13 @@
+{
+	"layers": {
+		"humanoid": [
+			{"texture": "epic_relics:relic_armor"}
+		],
+		"humanoid_baby": [
+			{"texture": "epic_relics:relic_armor"}
+		],
+		"wings": [
+			{"texture": "epic_relics:skywing"}
+		]
+	}
+}
