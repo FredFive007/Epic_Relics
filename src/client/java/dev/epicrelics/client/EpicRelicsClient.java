@@ -16,7 +16,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +23,11 @@ public final class EpicRelicsClient implements ClientModInitializer {
 	private static final Logger LOGGER = LoggerFactory.getLogger("epic_relics/client");
 	private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(EpicRelics.id("key_category"));
 	private static final KeyMapping DRAGON_VISION_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-			"key.epic_relics.dragon_vision", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY));
+			"key.epic_relics.dragon_vision", InputConstants.Type.KEYBOARD, InputConstants.KEY_V, CATEGORY));
 	private static final KeyMapping VOID_STEP_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-			"key.epic_relics.void_step", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, CATEGORY));
+			"key.epic_relics.void_step", InputConstants.Type.KEYBOARD, InputConstants.KEY_R, CATEGORY));
 	private static final KeyMapping RESONANCE_MODE_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
-			"key.epic_relics.resonance_mode", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_G, CATEGORY));
+			"key.epic_relics.resonance_mode", InputConstants.Type.KEYBOARD, InputConstants.KEY_G, CATEGORY));
 	private static int voidStepCooldownTicks;
 	private static int gravityFieldCooldownTicks;
 	private static int sonicBoomCooldownTicks;

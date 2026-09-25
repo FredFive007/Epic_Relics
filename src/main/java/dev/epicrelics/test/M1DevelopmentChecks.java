@@ -2,10 +2,13 @@ package dev.epicrelics.test;
 
 import dev.epicrelics.EpicRelics;
 import dev.epicrelics.item.ModItems;
+import dev.epicrelics.item.RelicArmorEnchantments;
 import java.util.List;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -15,6 +18,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 
 /** Development-only acceptance checks; never registered in a production launch. */
 public final class M1DevelopmentChecks {
@@ -23,6 +28,9 @@ public final class M1DevelopmentChecks {
 
 	public static void initialize() {
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			verifyGrindstoneMixinTargets();
+			var enchantments = server.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+			var mending = enchantments.getOrThrow(Enchantments.MENDING);
 			var cases = List.of(
 					new SmithingCase("dragon_sight_helmet_smithing", Items.DRAGON_HEAD, Items.NETHERITE_HELMET, Items.NETHER_STAR, ModItems.DRAGON_SIGHT_HELMET),
 					new SmithingCase("skywing_chestplate_smithing", Items.ELYTRA, Items.NETHERITE_CHESTPLATE, Items.NETHER_STAR, ModItems.SKYWING_CHESTPLATE),
@@ -33,19 +41,54 @@ public final class M1DevelopmentChecks {
 					new SmithingCase("netherite_bow_blank_smithing", Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE, Items.BOW, Items.NETHERITE_INGOT, ModItems.NETHERITE_BOW_BLANK));
 
 			for (SmithingCase testCase : cases) {
+				ItemStack base = new ItemStack(testCase.base());
+				boolean relicArmorOutput = RelicArmorEnchantments.isRelicArmor(new ItemStack(testCase.output()));
+				if (relicArmorOutput) {
+					EnchantmentHelper.updateEnchantments(base, mutable -> {
+						mutable.set(mending, 1);
+						mutable.set(enchantments.getOrThrow(Enchantments.PROTECTION), 2);
+					});
+				}
 				var input = new SmithingRecipeInput(
 						new ItemStack(testCase.template()),
-						new ItemStack(testCase.base()),
+						base,
 						new ItemStack(testCase.addition()));
 				var holder = server.getRecipeManager()
 						.getRecipeFor(RecipeType.SMITHING, input, server.overworld())
 						.orElseThrow(() -> new IllegalStateException("No smithing recipe matched " + testCase.id()));
 				Identifier actualId = holder.id().identifier();
-				Item actualOutput = holder.value().assemble(input).getItem();
+				ItemStack actualStack = holder.value().assemble(input);
+				Item actualOutput = actualStack.getItem();
 				if (!actualId.equals(id(testCase.id())) || actualOutput != testCase.output()) {
 					throw new IllegalStateException("Wrong smithing result for " + testCase.id()
 							+ ": recipe=" + actualId + ", output=" + actualOutput);
 				}
+				if (relicArmorOutput) {
+					RelicArmorEnchantments.enforceInnateProtections(actualStack, server.registryAccess());
+					if (!RelicArmorEnchantments.hasInnateProtections(actualStack, server.registryAccess())
+							|| EnchantmentHelper.getItemEnchantmentLevel(mending, actualStack) != 1) {
+						throw new IllegalStateException("Relic armor smithing did not preserve other enchantments "
+								+ "and enforce four protection V enchantments for " + testCase.id());
+					}
+				}
+			}
+
+			ItemStack grindstoneInput = new ItemStack(ModItems.DRAGON_SIGHT_HELMET);
+			RelicArmorEnchantments.enforceInnateProtections(grindstoneInput, server.registryAccess());
+			if (RelicArmorEnchantments.getGrindstoneExperience(grindstoneInput) != 0) {
+				throw new IllegalStateException("Innate relic armor protections must not yield grindstone experience");
+			}
+			EnchantmentHelper.updateEnchantments(grindstoneInput, mutable -> mutable.set(mending, 1));
+			if (RelicArmorEnchantments.getGrindstoneExperience(grindstoneInput) <= 0) {
+				throw new IllegalStateException("Ordinary relic armor enchantments must still yield grindstone experience");
+			}
+			ItemStack grindstoneResult = grindstoneInput.copy();
+			EnchantmentHelper.updateEnchantments(grindstoneResult,
+					mutable -> mutable.removeIf(enchantment -> !enchantment.is(EnchantmentTags.CURSE)));
+			RelicArmorEnchantments.enforceInnateProtections(grindstoneResult, server.registryAccess());
+			if (!RelicArmorEnchantments.hasInnateProtections(grindstoneResult, server.registryAccess())
+					|| EnchantmentHelper.getItemEnchantmentLevel(mending, grindstoneResult) != 0) {
+				throw new IllegalStateException("Grindstone must retain innate protections and remove ordinary enchantments");
 			}
 
 			var finalItems = List.of(
@@ -90,8 +133,17 @@ public final class M1DevelopmentChecks {
 				throw new IllegalStateException("M1 armor total or weapon enchantment tag invariant failed");
 			}
 
-			EpicRelics.LOGGER.info("M1 development check passed: recipes, unbreakable items, enchantment tags, and 30-point armor set verified");
+			EpicRelics.LOGGER.info("M1 development check passed: recipes, innate enchantments, grindstone handling, and 30-point armor set verified");
 		});
+	}
+
+	private static void verifyGrindstoneMixinTargets() {
+		try {
+			Class.forName("net.minecraft.world.inventory.GrindstoneMenu");
+			Class.forName("net.minecraft.world.inventory.GrindstoneMenu$4");
+		} catch (ClassNotFoundException exception) {
+			throw new IllegalStateException("Grindstone mixin target changed", exception);
+		}
 	}
 
 	private static Identifier id(String path) {

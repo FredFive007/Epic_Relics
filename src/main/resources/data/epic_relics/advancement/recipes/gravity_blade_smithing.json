@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "criteria": {
     "has_core": { "trigger": "minecraft:inventory_changed", "conditions": { "items": [{ "items": "minecraft:mace" }] } },
-    "has_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipe": "epic_relics:gravity_blade_smithing" } }
+    "has_recipe": { "trigger": "minecraft:recipe_unlocked", "conditions": { "recipes": ["epic_relics:gravity_blade_smithing"] } }
   },
   "requirements": [["has_core", "has_recipe"]],
   "rewards": { "recipes": ["epic_relics:gravity_blade_smithing"] }

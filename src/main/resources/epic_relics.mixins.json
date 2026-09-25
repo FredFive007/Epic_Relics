@@ -6,7 +6,10 @@
 		"EnderManMixin",
 		"LivingEntityLandingMixin",
 		"LivingEntityKnockbackMixin",
-		"AbstractArrowMixin"
+		"AbstractArrowMixin",
+		"SmithingMenuMixin",
+		"GrindstoneMenuMixin",
+		"GrindstoneExperienceMixin"
 	],
 	"client": [
 		"client.FogRendererMixin",
