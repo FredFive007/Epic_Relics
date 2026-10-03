@@ -1,0 +1,34 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:gravity_blade"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.mastery.gravity.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.mastery.gravity.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "plunge": {
+      "trigger": "minecraft:impossible"
+    },
+    "field": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "plunge"
+    ],
+    [
+      "field"
+    ]
+  ],
+  "parent": "epic_relics:relics/obtained/gravity"
+}

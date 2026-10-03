@@ -68,6 +68,9 @@ public final class GravityBladeAbility {
 		if (!(attacker.level() instanceof ServerLevel level)) {
 			return;
 		}
+		if (attacker instanceof ServerPlayer serverPlayer) {
+			dev.epicrelics.progression.RelicProgression.onPlungeHit(serverPlayer);
+		}
 		level.sendParticles(ParticleTypes.CRIT, target.getX(), target.getY(0.6), target.getZ(),
 				8, 0.3, 0.3, 0.3, 0.3);
 		RelicParticles.ring(level, ParticleTypes.DUST_PLUME, target.position(), 1.25, 18, 0.08);
@@ -77,7 +80,13 @@ public final class GravityBladeAbility {
 	}
 
 	public static void cast(ServerPlayer player) {
-		if (!player.getMainHandItem().is(ModItems.GRAVITY_BLADE) || GRAVITY_COOLDOWNS.containsKey(player.getUUID())) {
+		if (!player.getMainHandItem().is(ModItems.GRAVITY_BLADE)) {
+			RelicFeedback.explain(player, "requires_blade");
+			return;
+		}
+		if (GRAVITY_COOLDOWNS.containsKey(player.getUUID())) {
+			ServerPlayNetworking.send(player, new GravityFieldCooldownPayload(GRAVITY_COOLDOWNS.get(player.getUUID())));
+			RelicFeedback.explain(player, "skill_cooling_down");
 			return;
 		}
 		ServerLevel level = player.level();
@@ -88,10 +97,12 @@ public final class GravityBladeAbility {
 			if (target.distanceToSqr(player) > GRAVITY_RADIUS * GRAVITY_RADIUS) {
 				continue;
 			}
-			target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, SLOWNESS_TICKS, SLOWNESS_AMPLIFIER), player);
+			if (target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, SLOWNESS_TICKS, SLOWNESS_AMPLIFIER), player)) {
+				dev.epicrelics.progression.RelicProgression.onGravityFieldHit(player);
+			}
 			Vec3 inward = center.subtract(target.position()).normalize();
 			level.sendParticles(ParticleTypes.END_ROD, target.getX(), target.getY(0.6), target.getZ(),
-					3, inward.x * 0.4, inward.y * 0.1 + 0.1, inward.z * 0.4, 0.25);
+					0, inward.x, inward.y * 0.25 + 0.1, inward.z, 0.25);
 		}
 
 		level.playSound(null, player.getX(), player.getY(), player.getZ(),
@@ -99,9 +110,9 @@ public final class GravityBladeAbility {
 		level.sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY() + 1.0, player.getZ(),
 				40, 0.8, 0.8, 0.8, 0.0);
 		RelicParticles.ring(level, ParticleTypes.REVERSE_PORTAL, center,
-				GRAVITY_RADIUS, 48, 0.18);
-		RelicParticles.ring(level, ParticleTypes.END_ROD, center,
-				GRAVITY_RADIUS * 0.5, 28, 0.75);
+				GRAVITY_RADIUS, 32, 0.18);
+		RelicParticles.wave(level, ParticleTypes.END_ROD, center,
+				GRAVITY_RADIUS, 24, 0.3, true);
 		GRAVITY_COOLDOWNS.put(player.getUUID(), GRAVITY_COOLDOWN_TICKS);
 		ServerPlayNetworking.send(player, new GravityFieldCooldownPayload(GRAVITY_COOLDOWN_TICKS));
 	}

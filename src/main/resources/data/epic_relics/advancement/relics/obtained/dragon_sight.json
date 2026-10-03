@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:dragon_sight_helmet"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.obtained.dragon_sight.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.obtained.dragon_sight.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "epic_relics:dragon_sight_helmet"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "parent": "epic_relics:relics/trials/dragon_sight"
+}

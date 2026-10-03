@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "epic_relics:dragon_sight_sigil",
+  "base": "minecraft:netherite_helmet",
+  "addition": "minecraft:nether_star",
+  "result": {
+    "id": "epic_relics:dragon_sight_helmet"
+  }
+}

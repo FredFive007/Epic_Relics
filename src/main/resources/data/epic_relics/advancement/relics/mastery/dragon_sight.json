@@ -1,0 +1,40 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:dragon_sight_helmet"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.mastery.dragon_sight.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.mastery.dragon_sight.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "nether": {
+      "trigger": "minecraft:impossible"
+    },
+    "end": {
+      "trigger": "minecraft:impossible"
+    },
+    "deep_dark": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "nether"
+    ],
+    [
+      "end"
+    ],
+    [
+      "deep_dark"
+    ]
+  ],
+  "parent": "epic_relics:relics/obtained/dragon_sight"
+}

@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:gravity_blade"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.obtained.gravity.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.obtained.gravity.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "obtained": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "epic_relics:gravity_blade"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "obtained"
+    ]
+  ],
+  "parent": "epic_relics:relics/trials/gravity"
+}

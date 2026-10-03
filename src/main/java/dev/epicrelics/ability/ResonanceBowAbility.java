@@ -57,6 +57,10 @@ public final class ResonanceBowAbility {
 		return !SONIC_COOLDOWNS.containsKey(player.getUUID());
 	}
 
+	public static void syncCooldown(ServerPlayer player) {
+		ServerPlayNetworking.send(player, new SonicBoomCooldownPayload(SONIC_COOLDOWNS.getOrDefault(player.getUUID(), 0)));
+	}
+
 	public static void toggleMode(ServerPlayer player) {
 		ItemStack stack = player.getMainHandItem();
 		if (!stack.is(ModItems.RESONANCE_BOW)) {
@@ -84,9 +88,16 @@ public final class ResonanceBowAbility {
 		level.playSound(null, player.getX(), player.getY(), player.getZ(),
 				SoundEvents.WARDEN_SONIC_BOOM, SoundSource.PLAYERS, 1.0F, 1.0F);
 		if (target != null) {
-			target.hurtServer(level, level.damageSources().sonicBoom(player), SONIC_DAMAGE);
-			level.sendParticles(ParticleTypes.SCULK_SOUL, target.getX(), target.getY(0.6), target.getZ(),
-					12, 0.35, 0.45, 0.35, 0.04);
+			if (target.hurtServer(level, level.damageSources().sonicBoom(player), SONIC_DAMAGE)) {
+				dev.epicrelics.progression.RelicProgression.onSonicHit(player);
+				level.sendParticles(ParticleTypes.SCULK_SOUL, target.getX(), target.getY(0.6), target.getZ(),
+						12, 0.35, 0.45, 0.35, 0.04);
+				RelicFeedback.explain(player, "sonic_hit");
+			} else {
+				RelicFeedback.explain(player, "sonic_resisted");
+			}
+		} else {
+			RelicFeedback.explain(player, "sonic_miss");
 		}
 		SONIC_COOLDOWNS.put(player.getUUID(), SONIC_COOLDOWN_TICKS);
 		ServerPlayNetworking.send(player, new SonicBoomCooldownPayload(SONIC_COOLDOWN_TICKS));
@@ -96,11 +107,13 @@ public final class ResonanceBowAbility {
 		for (LivingEntity target : level.getEntities(EntityTypeTest.forClass(LivingEntity.class),
 				new AABB(pos, pos).inflate(DARKNESS_RADIUS), t -> StompAbility.isLegalTarget(shooter, t))) {
 			if (target.distanceToSqr(pos.x, pos.y, pos.z) <= DARKNESS_RADIUS * DARKNESS_RADIUS) {
-				target.addEffect(new MobEffectInstance(MobEffects.DARKNESS, DARKNESS_TICKS, 0), shooter);
+				if (target.addEffect(new MobEffectInstance(MobEffects.DARKNESS, DARKNESS_TICKS, 0), shooter)) {
+					dev.epicrelics.progression.RelicProgression.onDarknessHit(shooter);
+				}
 			}
 		}
 		RelicParticles.ring(level, ParticleTypes.SCULK_SOUL, pos, DARKNESS_RADIUS, 28, 0.18);
-		RelicParticles.ring(level, ParticleTypes.PORTAL, pos, DARKNESS_RADIUS * 0.55, 20, 0.55);
+		RelicParticles.wave(level, ParticleTypes.PORTAL, pos, DARKNESS_RADIUS, 16, 0.3, false);
 		level.sendParticles(ParticleTypes.SOUL, pos.x, pos.y + 0.4, pos.z,
 				18, 0.65, 0.5, 0.65, 0.03);
 	}

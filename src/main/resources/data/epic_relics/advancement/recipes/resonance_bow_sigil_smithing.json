@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sigil": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "epic_relics:resonance_sigil"
+          }
+        ]
+      }
+    },
+    "has_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipes": [
+          "epic_relics:resonance_bow_sigil_smithing"
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_sigil",
+      "has_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "epic_relics:resonance_bow_sigil_smithing"
+    ]
+  }
+}

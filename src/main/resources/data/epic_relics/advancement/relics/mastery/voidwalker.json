@@ -1,0 +1,40 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:voidwalker_leggings"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.mastery.voidwalker.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.mastery.voidwalker.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "overworld": {
+      "trigger": "minecraft:impossible"
+    },
+    "nether": {
+      "trigger": "minecraft:impossible"
+    },
+    "end": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "overworld"
+    ],
+    [
+      "nether"
+    ],
+    [
+      "end"
+    ]
+  ],
+  "parent": "epic_relics:relics/obtained/voidwalker"
+}

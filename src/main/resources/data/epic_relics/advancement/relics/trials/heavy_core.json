@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:heavy_core_sigil"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.trials.heavy_core.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.trials.heavy_core.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "explored": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "explored"
+    ]
+  ],
+  "parent": "epic_relics:relics/clues/heavy_core",
+  "rewards": {
+    "loot": [
+      "epic_relics:rewards/heavy_core_sigil"
+    ]
+  }
+}

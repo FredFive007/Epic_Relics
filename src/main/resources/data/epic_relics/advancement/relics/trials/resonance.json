@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:resonance_sigil"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.trials.resonance.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.trials.resonance.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "explored": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "explored"
+    ]
+  ],
+  "parent": "epic_relics:relics/clues/resonance",
+  "rewards": {
+    "loot": [
+      "epic_relics:rewards/resonance_sigil"
+    ]
+  }
+}

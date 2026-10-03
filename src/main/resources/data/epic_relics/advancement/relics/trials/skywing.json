@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:skywing_sigil"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.trials.skywing.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.trials.skywing.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "explored": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "explored"
+    ]
+  ],
+  "parent": "epic_relics:relics/clues/skywing",
+  "rewards": {
+    "loot": [
+      "epic_relics:rewards/skywing_sigil"
+    ]
+  }
+}

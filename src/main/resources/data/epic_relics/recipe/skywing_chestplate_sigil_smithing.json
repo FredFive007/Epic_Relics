@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "epic_relics:skywing_sigil",
+  "base": "minecraft:netherite_chestplate",
+  "addition": "minecraft:nether_star",
+  "result": {
+    "id": "epic_relics:skywing_chestplate"
+  }
+}

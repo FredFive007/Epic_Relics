@@ -1,0 +1,34 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:resonance_bow"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.mastery.resonance.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.mastery.resonance.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "darkness": {
+      "trigger": "minecraft:impossible"
+    },
+    "sonic": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "darkness"
+    ],
+    [
+      "sonic"
+    ]
+  ],
+  "parent": "epic_relics:relics/obtained/resonance"
+}

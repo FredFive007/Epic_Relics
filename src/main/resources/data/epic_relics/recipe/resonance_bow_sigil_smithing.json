@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "epic_relics:resonance_sigil",
+  "base": "epic_relics:netherite_bow_blank",
+  "addition": "minecraft:nether_star",
+  "result": {
+    "id": "epic_relics:resonance_bow"
+  }
+}

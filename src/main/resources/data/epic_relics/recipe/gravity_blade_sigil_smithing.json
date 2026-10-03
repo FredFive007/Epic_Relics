@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "epic_relics:gravity_sigil",
+  "base": "minecraft:netherite_sword",
+  "addition": "minecraft:nether_star",
+  "result": {
+    "id": "epic_relics:gravity_blade"
+  }
+}

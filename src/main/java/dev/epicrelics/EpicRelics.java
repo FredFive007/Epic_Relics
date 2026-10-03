@@ -29,8 +29,12 @@ public final class EpicRelics implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModComponents.initialize();
+		dev.epicrelics.ability.RelicFeedback.initialize();
+		dev.epicrelics.ability.RelicParticles.initialize();
 		ModItems.initialize();
+		dev.epicrelics.progression.ProgressionItems.initialize();
 		ModCreativeTabs.initialize();
+		dev.epicrelics.progression.RelicProgression.initialize();
 		RelicDamageRules.initialize();
 		DragonSightEffectImmunity.initialize();
 		VoidStepAbility.initialize();
@@ -42,6 +46,7 @@ public final class EpicRelics implements ModInitializer {
 			M3DevelopmentChecks.initialize();
 			M4DevelopmentChecks.initialize();
 			M5DevelopmentChecks.initialize();
+			dev.epicrelics.progression.ProgressionDevelopmentChecks.initialize();
 		}
 		LOGGER.info("Epic Relics common initialization complete");
 	}

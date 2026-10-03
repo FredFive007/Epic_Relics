@@ -1,0 +1,40 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:heavy_core_boots"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.mastery.heavy_core.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.mastery.heavy_core.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "light": {
+      "trigger": "minecraft:impossible"
+    },
+    "medium": {
+      "trigger": "minecraft:impossible"
+    },
+    "heavy": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "light"
+    ],
+    [
+      "medium"
+    ],
+    [
+      "heavy"
+    ]
+  ],
+  "parent": "epic_relics:relics/obtained/heavy_core"
+}

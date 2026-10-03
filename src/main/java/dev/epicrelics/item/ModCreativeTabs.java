@@ -28,6 +28,7 @@ public final class ModCreativeTabs {
 						output.accept(ModItems.GRAVITY_BLADE);
 						output.accept(ModItems.RESONANCE_BOW);
 						output.accept(ModItems.NETHERITE_BOW_BLANK);
+						dev.epicrelics.progression.ProgressionItems.ALL_SIGILS.forEach(output::accept);
 					})
 					.build());
 

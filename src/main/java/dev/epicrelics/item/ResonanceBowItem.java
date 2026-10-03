@@ -2,6 +2,7 @@ package dev.epicrelics.item;
 
 import dev.epicrelics.ability.ResonanceBowAbility;
 import dev.epicrelics.ability.DarknessArrowMarker;
+import dev.epicrelics.ability.RelicFeedback;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -26,18 +27,25 @@ public final class ResonanceBowItem extends BowItem {
 		if (entity instanceof Player player && ResonanceBowAbility.isSonicMode(stack)) {
 			int timeHeld = this.getUseDuration(stack, entity) - remainingTime;
 			if (BowItem.getPowerForTime(timeHeld) < 1.0F) {
+				if (player instanceof ServerPlayer serverPlayer) {
+					RelicFeedback.explain(serverPlayer, "bow_full_draw_required");
+				}
 				return false;
 			}
 			if (level instanceof ServerLevel && player instanceof ServerPlayer serverPlayer) {
 				if (!ResonanceBowAbility.isSonicReady(serverPlayer)) {
+					ResonanceBowAbility.syncCooldown(serverPlayer);
+					RelicFeedback.explain(serverPlayer, "skill_cooling_down");
 					return false;
 				}
 				ItemStack projectile = player.getProjectile(stack);
 				if (projectile.isEmpty()) {
+					RelicFeedback.explain(serverPlayer, "bow_arrow_required");
 					return false;
 				}
 				ItemStack ammo = useAmmo(stack, projectile, player, false);
 				if (ammo.isEmpty()) {
+					RelicFeedback.explain(serverPlayer, "bow_arrow_required");
 					return false;
 				}
 				ResonanceBowAbility.castSonicBoom(serverPlayer);

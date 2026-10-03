@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "epic_relics:voidwalker_sigil",
+  "base": "minecraft:netherite_leggings",
+  "addition": "minecraft:nether_star",
+  "result": {
+    "id": "epic_relics:voidwalker_leggings"
+  }
+}

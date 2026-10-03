@@ -1,0 +1,28 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:skywing_chestplate"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.mastery.skywing.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.mastery.skywing.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "flight": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "flight"
+    ]
+  ],
+  "parent": "epic_relics:relics/obtained/skywing"
+}

@@ -1,0 +1,33 @@
+{
+  "display": {
+    "icon": {
+      "id": "epic_relics:dragon_sight_sigil"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.trials.dragon_sight.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.trials.dragon_sight.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "explored": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "explored"
+    ]
+  ],
+  "parent": "epic_relics:relics/clues/dragon_sight",
+  "rewards": {
+    "loot": [
+      "epic_relics:rewards/dragon_sight_sigil"
+    ]
+  }
+}

@@ -39,7 +39,13 @@ public final class VoidStepAbility {
 	}
 
 	private static void use(ServerPlayer player) {
-		if (!RelicEquipment.hasLeggings(player) || COOLDOWNS.containsKey(player.getUUID())) {
+		if (!RelicEquipment.hasLeggings(player)) {
+			RelicFeedback.explain(player, "requires_leggings");
+			return;
+		}
+		if (COOLDOWNS.containsKey(player.getUUID())) {
+			ServerPlayNetworking.send(player, new VoidStepCooldownPayload(COOLDOWNS.get(player.getUUID())));
+			RelicFeedback.explain(player, "skill_cooling_down");
 			return;
 		}
 		ServerLevel level = player.level();
@@ -54,10 +60,12 @@ public final class VoidStepAbility {
 		level.sendParticles(ParticleTypes.PORTAL, departure.x, departure.y, departure.z,
 				24, 0.3, 0.75, 0.3, 0.1);
 		player.teleportTo(destination.x, destination.y, destination.z);
+		dev.epicrelics.progression.RelicProgression.onVoidStep(player);
 		COOLDOWNS.put(player.getUUID(), COOLDOWN_TICKS);
 		ServerPlayNetworking.send(player, new VoidStepCooldownPayload(COOLDOWN_TICKS));
 		RelicParticles.ring(level, ParticleTypes.PORTAL, destination, 1.0, 28, 0.15);
 		RelicParticles.ring(level, ParticleTypes.END_ROD, destination, 0.55, 12, 0.85);
+		RelicParticles.wave(level, ParticleTypes.REVERSE_PORTAL, destination, 1.2, 16, 0.2, true);
 		level.sendParticles(ParticleTypes.PORTAL, destination.x, destination.y, destination.z,
 				28, 0.35, 0.8, 0.35, 0.12);
 		level.playSound(null, destination.x, destination.y, destination.z,

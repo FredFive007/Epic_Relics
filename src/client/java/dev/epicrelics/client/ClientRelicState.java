@@ -18,4 +18,8 @@ public final class ClientRelicState {
 		dragonVisionEnabled = !dragonVisionEnabled;
 		return dragonVisionEnabled;
 	}
+
+	public static void reset() {
+		dragonVisionEnabled = true;
+	}
 }

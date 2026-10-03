@@ -1,0 +1,9 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "epic_relics:entity/equipment/humanoid/relic_armor",
+      "sprite": "epic_relics:item/relic_palette"
+    }
+  ]
+}

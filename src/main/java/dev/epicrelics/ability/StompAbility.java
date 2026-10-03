@@ -29,6 +29,7 @@ public final class StompAbility {
 				continue;
 			}
 			if (target.hurtServer(level, damageSource, tier.damage)) {
+				dev.epicrelics.progression.RelicProgression.onStompHit(player, fallDistance);
 				target.knockback(tier.knockback,
 						player.getX() - target.getX(), player.getZ() - target.getZ(), damageSource, 0.0F);
 			}
@@ -42,7 +43,9 @@ public final class StompAbility {
 		RelicParticles.ring(level, ParticleTypes.DUST_PLUME, center,
 				tier.radius * 0.55, Math.max(16, tier.particleCount / 2), 0.08);
 		RelicParticles.ring(level, ParticleTypes.CLOUD, center,
-				tier.radius, Math.max(20, tier.particleCount / 2), 0.12);
+				tier.radius, Math.min(32, Math.max(20, tier.particleCount / 2)), 0.12);
+		RelicParticles.wave(level, ParticleTypes.DUST_PLUME, center,
+				tier.radius, (int) (tier.radius * 4), 0.16, false);
 		level.playSound(null, player.getX(), player.getY(), player.getZ(), tier.sound,
 				SoundSource.PLAYERS, tier.volume, 0.85F);
 	}

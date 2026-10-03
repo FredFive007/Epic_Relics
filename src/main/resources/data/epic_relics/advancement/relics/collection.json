@@ -1,0 +1,50 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:nether_star"
+    },
+    "title": {
+      "translate": "advancement.epic_relics.collection.title"
+    },
+    "description": {
+      "translate": "advancement.epic_relics.collection.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "collection": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "epic_relics:dragon_sight_helmet"
+          },
+          {
+            "items": "epic_relics:skywing_chestplate"
+          },
+          {
+            "items": "epic_relics:voidwalker_leggings"
+          },
+          {
+            "items": "epic_relics:heavy_core_boots"
+          },
+          {
+            "items": "epic_relics:gravity_blade"
+          },
+          {
+            "items": "epic_relics:resonance_bow"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "collection"
+    ]
+  ],
+  "parent": "epic_relics:relics/root"
+}
