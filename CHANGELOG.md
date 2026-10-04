@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.3.1-beta+26.3 - 2026-10-04
+
+### Changed
+
+- Redesigned armor with swept segmented horns, a closed dragon faceplate,
+  layered shoulder scales, a framed violet chest core, forearm guards,
+  articulated leg scales, and slimmer boots.
+- Added restrained dark-gold geometry over the existing black-violet palette.
+- Retained equipment stats, abilities, recipes, progression, and the absence
+  of a persistent side HUD.
+- Added a three-stage development roadmap covering regression testing,
+  exploration guidance, and optional mastery cosmetics.
+
+### Fixed
+
+- Trimmed Skywing Chestplates retain their normal wing texture without trying
+  to load nonexistent wing-trim textures. The real item's trim, body-armor trim,
+  enchantments, and other wing items remain unchanged.
+
+### Validation
+
+- Source generation and the build passed; a dedicated server passed M1-M5 and
+  the progression checks, stopped cleanly, and completed `runServer` successfully.
+- A freshly restarted client completed nine captures with gold Spire trim and
+  Protection V. Inspected front, back, and oblique bow-drawing views show body
+  trim and the restored wing texture without missing wing-trim texture errors.
+- All nine final untrimmed-armor captures were reviewed: normal/close views,
+  front/back/oblique angles, crouching, and bow drawing. The helper completed
+  its 400-tick sequence, restored temporary settings, and logged no missing
+  texture errors.
+- Raised plates can obscure parts of the underlying trim. Complete animation,
+  active gliding, armor stands, additional trim patterns, baby/slim models,
+  ordinary Elytra, Vulkan, and third-party rendering compatibility remain
+  unverified.
+
 ## 0.3.0-beta+26.3 - 2026-10-03
 
 ### Added

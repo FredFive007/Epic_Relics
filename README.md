@@ -5,6 +5,22 @@ Epic Relics is a Fabric mod for Minecraft Java Edition 26.3.
 It adds six unbreakable endgame relics with distinct armor, movement, melee,
 area-control, and ranged abilities.
 
+## Beta 0.3.1: dragon armor redesign
+
+Version `0.3.1-beta+26.3` refines the armor into an articulated black-violet
+dragon suit with restrained dark-gold edges: swept horns, a closed faceplate,
+layered shoulders, a framed chest core, forearm guards, scale-like leg plates,
+and slimmer boots. The geometry follows the existing wearer bones and keeps
+the original body-armor trim, enchantment glint, and Skywing wing appearance.
+Raised armor plates can cover portions of the underlying trim. Trimmed Skywing
+Chestplates now retain their normal wing texture without requesting unsupported
+wing-trim textures; the actual item's trim and body-armor pattern are preserved.
+
+The next development priorities are documented in the
+[October 4 roadmap](docs/next-steps-2026-10-04.md): gameplay and multiplayer
+regression checks, clearer exploration guidance, then optional mastery cosmetics.
+These later stages are a plan, not features already included in this build.
+
 ## Beta 0.3.0: exploration, skill feedback, and 3D relics
 
 Version `0.3.0-beta+26.3` adds brief skill feedback through the normal action bar
@@ -89,6 +105,18 @@ eligible enchantments normally, but retains the innate protections and does not
 award experience for them.
 
 ## Validation status
+
+On 2026-10-04, the 0.3.1 build passed, and the dedicated server passed M1-M5 and
+the progression checks, then stopped cleanly with `runServer` completing
+successfully. A freshly restarted client captured nine armor views
+with gold Spire trim and Protection V. Front, back, and oblique bow-drawing
+inspection confirmed visible body trim and the restored original wing texture,
+with no missing wing-trim texture error. A second fresh client completed the
+untrimmed-armor sequence; all nine normal/close, front/back/oblique, crouching,
+and bow-drawing views were reviewed without missing textures, and the helper
+restored its temporary settings. Walking, swimming, active gliding, armor stands,
+baby/slim models, ordinary Elytra, and renderer compatibility remain separate
+checks.
 
 On 2026-10-03, source generation, the build, dedicated-server M1-M5 checks, and
 the new checks for six alternative recipes, exact sigil rewards, and the

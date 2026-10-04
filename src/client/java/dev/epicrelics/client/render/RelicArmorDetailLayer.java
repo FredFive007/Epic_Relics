@@ -25,14 +25,16 @@ public final class RelicArmorDetailLayer extends RenderLayer<HumanoidRenderState
 	private static final EquipmentSlot[] SLOTS = {
 			EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
 	};
-	private final EnumMap<EquipmentSlot, Model.Simple> adults = new EnumMap<>(EquipmentSlot.class);
-	private final EnumMap<EquipmentSlot, Model.Simple> babies = new EnumMap<>(EquipmentSlot.class);
+	// Multiplying the existing amber texel (244, 128, 26) produces a muted antique gold.
+	private static final int GILDING_COLOR = 0xFF96E6FF;
+	private final EnumMap<EquipmentSlot, ArmorDetails> adults = new EnumMap<>(EquipmentSlot.class);
+	private final EnumMap<EquipmentSlot, ArmorDetails> babies = new EnumMap<>(EquipmentSlot.class);
 
 	public RelicArmorDetailLayer(RenderLayerParent<HumanoidRenderState, HumanoidModel<HumanoidRenderState>> parent) {
 		super(parent);
 		for (EquipmentSlot slot : SLOTS) {
-			adults.put(slot, new Model.Simple(RelicArmorGeometry.create(slot, false).bakeRoot(), RenderTypes::armorCutoutNoCull));
-			babies.put(slot, new Model.Simple(RelicArmorGeometry.create(slot, true).bakeRoot(), RenderTypes::armorCutoutNoCull));
+			adults.put(slot, bake(slot, false));
+			babies.put(slot, bake(slot, true));
 		}
 	}
 
@@ -51,15 +53,26 @@ public final class RelicArmorDetailLayer extends RenderLayer<HumanoidRenderState
 			if (!isRelic(item, slot)) {
 				continue;
 			}
-			Model.Simple model = (baby ? babies : adults).get(slot);
+			ArmorDetails models = (baby ? babies : adults).get(slot);
 			var renderType = item.hasFoil()
 					? RenderTypes.armorCutoutNoCullGlint(TEXTURE) : RenderTypes.armorCutoutNoCull(TEXTURE);
 			// Deferred submission copies transforms while rendering, not from a previous entity/frame.
-			ArmorRenderer.submitTransformCopyingModel(getParentModel(), state, model, Unit.INSTANCE,
+			ArmorRenderer.submitTransformCopyingModel(getParentModel(), state, models.plates(), Unit.INSTANCE,
 					false, collector.order(3), poses, renderType, light, OverlayTexture.NO_OVERLAY,
 					-1, null, state.outlineColor);
+			ArmorRenderer.submitTransformCopyingModel(getParentModel(), state, models.gilding(), Unit.INSTANCE,
+					false, collector.order(4), poses, renderType, light, OverlayTexture.NO_OVERLAY,
+					GILDING_COLOR, null, state.outlineColor);
 		}
 	}
+
+	private static ArmorDetails bake(EquipmentSlot slot, boolean baby) {
+		return new ArmorDetails(
+				new Model.Simple(RelicArmorGeometry.create(slot, baby, false).bakeRoot(), RenderTypes::armorCutoutNoCull),
+				new Model.Simple(RelicArmorGeometry.create(slot, baby, true).bakeRoot(), RenderTypes::armorCutoutNoCull));
+	}
+
+	private record ArmorDetails(Model.Simple plates, Model.Simple gilding) {}
 
 	private static boolean isRelic(ItemStack item, EquipmentSlot slot) {
 		return item.is(switch (slot) {

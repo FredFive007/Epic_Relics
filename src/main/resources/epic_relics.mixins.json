@@ -13,7 +13,8 @@
 	],
 	"client": [
 		"client.FogRendererMixin",
-		"client.LightmapRenderStateExtractorMixin"
+		"client.LightmapRenderStateExtractorMixin",
+		"client.SkywingTrimMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

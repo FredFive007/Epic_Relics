@@ -38,16 +38,28 @@ public final class VisualCheckClient {
 	private static boolean originalHudHidden;
 	private static int originalSlot;
 	private static AdvancementsScreen advancementScreen;
+	private static boolean armorCheck;
+	private static boolean armorStarted;
+	private static int originalFov;
+	private static float originalYaw;
+	private static float originalPitch;
+	private static float originalHeadYaw;
+	private static float originalBodyYaw;
+	private static boolean originalCrouching;
+	private static float armorYawOffset;
+	private static int armorBowSlot = -1;
+	private static int armorEmptySlot = -1;
 
 	private VisualCheckClient() {
 	}
 
 	public static void initialize() {
 		if (initialized || !FabricLoader.getInstance().isDevelopmentEnvironment()
-				|| !Boolean.getBoolean("epicrelics.visualCheck")) {
+				|| !(Boolean.getBoolean("epicrelics.visualCheck") || Boolean.getBoolean("epicrelics.armorVisualCheck"))) {
 			return;
 		}
 		initialized = true;
+		armorCheck = Boolean.getBoolean("epicrelics.armorVisualCheck");
 		String configuredOutput = System.getProperty("epicrelics.visualCheckOutput");
 		output = configuredOutput == null || configuredOutput.isBlank()
 				? new File(Minecraft.getInstance().gameDirectory, "epic-relics-visual-qa")
@@ -66,7 +78,8 @@ public final class VisualCheckClient {
 				LOGGER.warn("Visual QA interrupted by disconnect after {} ticks", ticks);
 			}
 		});
-		LOGGER.info("Visual QA enabled; waiting for a loopback multiplayer server and all four relic armor pieces.");
+		LOGGER.info("Visual QA enabled ({}); waiting for a loopback multiplayer server and all four relic armor pieces.",
+				armorCheck ? "armor-only sequence" : "skills and progression sequence");
 	}
 
 	private static void tick(Minecraft client) {
@@ -79,7 +92,10 @@ public final class VisualCheckClient {
 			return;
 		}
 		if (client.gui.screen() != null && client.gui.screen() != advancementScreen) {
-			client.options.keyUse.setDown(false);
+			setHeld(client.options.keyUse, false, client.options.toggleUse().get());
+			if (armorCheck) {
+				setHeld(client.options.keyShift, false, client.options.toggleCrouch().get());
+			}
 			if (++waitingTicks % 100 == 1) {
 				LOGGER.warn("Visual QA is waiting for screen {} to close; no automatic UI interaction.",
 						client.gui.screen().getClass().getName());
@@ -87,6 +103,10 @@ public final class VisualCheckClient {
 			return;
 		}
 		if (client.isPaused()) {
+			return;
+		}
+		if (armorCheck) {
+			tickArmor(client);
 			return;
 		}
 		if (ticks == 0) {
@@ -182,6 +202,138 @@ public final class VisualCheckClient {
 		}
 	}
 
+	/** A short photo sequence; never equips, teleports, gives items, or sends commands. */
+	private static void tickArmor(Minecraft client) {
+		var player = client.player;
+		if (ticks == 0) {
+			if (!RelicEquipment.hasHelmet(player) || !RelicEquipment.hasChestplate(player)
+					|| !RelicEquipment.hasLeggings(player) || !RelicEquipment.hasBoots(player)) {
+				if (++waitingTicks % 100 == 1) {
+					LOGGER.info("Armor QA is waiting for all four equipped relic armor pieces; no weapon is required.");
+				}
+				return;
+			}
+			originalCamera = client.options.getCameraType();
+			originalHudHidden = client.gui.hud.isHidden();
+			originalSlot = player.getInventory().getSelectedSlot();
+			originalFov = client.options.fov().get();
+			originalYaw = player.getYRot();
+			originalPitch = player.getXRot();
+			originalHeadYaw = player.yHeadRot;
+			originalBodyYaw = player.yBodyRot;
+			originalCrouching = client.options.keyShift.isDown();
+			armorStarted = true;
+			KeyMapping.releaseAll();
+			setHudHidden(client, true);
+			setCamera(client, CameraType.THIRD_PERSON_FRONT);
+			client.options.fov().set(70);
+			for (int slot = 0; slot < 9; slot++) {
+				var stack = player.getInventory().getItem(slot);
+				if (armorEmptySlot < 0 && stack.isEmpty()) {
+					armorEmptySlot = slot;
+				}
+				if (armorBowSlot < 0 && stack.is(ModItems.RESONANCE_BOW)) {
+					armorBowSlot = slot;
+				}
+			}
+			if (armorEmptySlot >= 0) {
+				player.getInventory().setSelectedSlot(armorEmptySlot);
+			}
+			LOGGER.info("Armor QA ready: standard-FOV front 60; close front/back/left/right 100/140/180/220; crouch front/back 260/300; bow 350/370 if available; restore at 400. Original FOV={}", originalFov);
+		}
+		ticks++;
+		if (ticks == 60) {
+			capture(client, "armor-01-standard-fov70-front");
+		} else if (ticks == 80) {
+			client.options.fov().set(50);
+		} else if (ticks == 100) {
+			capture(client, "armor-02-close-fov50-front");
+		} else if (ticks == 120) {
+			setCamera(client, CameraType.THIRD_PERSON_BACK);
+		} else if (ticks == 140) {
+			capture(client, "armor-03-close-back");
+		} else if (ticks == 160) {
+			setCamera(client, CameraType.THIRD_PERSON_FRONT);
+			armorYawOffset = -45.0F;
+		} else if (ticks == 180) {
+			capture(client, "armor-04-close-left-oblique");
+		} else if (ticks == 200) {
+			armorYawOffset = 45.0F;
+		} else if (ticks == 220) {
+			capture(client, "armor-05-close-right-oblique");
+		} else if (ticks == 240) {
+			armorYawOffset = 0.0F;
+			setHeld(client.options.keyShift, true, client.options.toggleCrouch().get());
+		} else if (ticks == 260) {
+			capture(client, "armor-06-crouch-front");
+		} else if (ticks == 280) {
+			setCamera(client, CameraType.THIRD_PERSON_BACK);
+		} else if (ticks == 300) {
+			capture(client, "armor-07-crouch-back");
+		} else if (ticks == 310) {
+			setHeld(client.options.keyShift, false, client.options.toggleCrouch().get());
+			setCamera(client, CameraType.THIRD_PERSON_FRONT);
+			if (armorBowSlot >= 0) {
+				player.getInventory().setSelectedSlot(armorBowSlot);
+			} else {
+				LOGGER.warn("Armor QA bow pose skipped: no Resonance Bow in the hotbar.");
+			}
+		} else if (ticks == 320 && armorBowSlot >= 0) {
+			if (player.getProjectile(player.getMainHandItem()).isEmpty()) {
+				LOGGER.warn("Armor QA bow pose skipped: no usable arrow.");
+				armorBowSlot = -1;
+			} else {
+				setHeld(client.options.keyUse, true, client.options.toggleUse().get());
+			}
+		} else if (ticks == 350 && armorBowSlot >= 0) {
+			capture(client, player.isUsingItem() ? "armor-08-bow-drawn-front" : "armor-08-bow-pose-not-active");
+		} else if (ticks == 360 && armorBowSlot >= 0) {
+			armorYawOffset = -35.0F;
+		} else if (ticks == 370 && armorBowSlot >= 0) {
+			capture(client, player.isUsingItem() ? "armor-09-bow-drawn-oblique" : "armor-09-bow-pose-not-active");
+		} else if (ticks == 380) {
+			// Switching away cancels a bow draw without intentionally firing a projectile.
+			int restingSlot = armorEmptySlot >= 0 ? armorEmptySlot
+					: originalSlot != armorBowSlot ? originalSlot : (originalSlot + 1) % 9;
+			if (restingSlot != player.getInventory().getSelectedSlot()) {
+				player.getInventory().setSelectedSlot(restingSlot);
+				player.stopUsingItem();
+			}
+			setHeld(client.options.keyUse, false, client.options.toggleUse().get());
+			armorYawOffset = 0.0F;
+		} else if (ticks == 400) {
+			restoreSettings(client);
+			finished = true;
+			LOGGER.info("Armor QA complete at tick 400. Camera, HUD, hotbar slot, FOV, view and body/head rotations restored; no options saved.");
+			return;
+		}
+		if (!finished) {
+			// LocalPlayer's camera reads view yaw, while its rendered body/head read these fields.
+			// Keep the pose aligned and move only the temporary view angle for oblique photographs.
+			setArmorRotations(client, originalYaw + armorYawOffset, 0.0F, originalYaw, originalYaw);
+		}
+	}
+
+	private static void setHeld(KeyMapping key, boolean held, boolean toggleMode) {
+		if (key.isDown() != held) {
+			key.setDown(toggleMode || held);
+		}
+	}
+
+	private static void setArmorRotations(Minecraft client, float yaw, float pitch, float headYaw, float bodyYaw) {
+		var player = client.player;
+		if (player != null) {
+			player.setYRot(yaw);
+			player.yRotO = yaw;
+			player.setXRot(pitch);
+			player.xRotO = pitch;
+			player.yHeadRot = headYaw;
+			player.yHeadRotO = headYaw;
+			player.yBodyRot = bodyYaw;
+			player.yBodyRotO = bodyYaw;
+		}
+	}
+
 	private static void requestBowMode() {
 		if (ClientPlayNetworking.canSend(ResonanceModeRequestPayload.TYPE)) {
 			ClientPlayNetworking.send(ResonanceModeRequestPayload.INSTANCE);
@@ -219,6 +371,12 @@ public final class VisualCheckClient {
 
 	private static void restoreSettings(Minecraft client) {
 		KeyMapping.releaseAll();
+		if (armorStarted) {
+			client.options.fov().set(originalFov);
+			setArmorRotations(client, originalYaw, originalPitch, originalHeadYaw, originalBodyYaw);
+			setHeld(client.options.keyShift, originalCrouching, client.options.toggleCrouch().get());
+			armorStarted = false;
+		}
 		if (advancementScreen != null && client.gui.screen() == advancementScreen) {
 			client.gui.setScreen(null);
 		}
